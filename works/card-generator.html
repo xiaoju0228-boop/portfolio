@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息卡片生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .form-section, .preview-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .avatar-selection {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .avatar-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 3px solid #e2e8f0;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background: #f7fafc;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.05);
+            border-color: #48bb78;
+        }
+
+        .avatar-option.selected {
+            border-color: #48bb78;
+            background: #f0fff4;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
+        }
+
+        .template-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .template-option {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .template-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-option.selected {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        #cardPreview {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            aspect-ratio: 1.75;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 15px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>个人信息卡片生成器</h1>
+            <p class="subtitle">填写您的信息，实时生成精美的个人名片</p>
+
+            <div class="form-group">
+                <label>选择头像</label>
+                <div class="avatar-selection" id="avatarSelection"></div>
+            </div>
+
+            <div class="form-group">
+                <label>姓名 *</label>
+                <input type="text" id="name" placeholder="请输入您的姓名" value="张三">
+            </div>
+
+            <div class="form-group">
+                <label>职位/头衔 *</label>
+                <input type="text" id="title" placeholder="例如：高级产品经理" value="高级产品经理">
+            </div>
+
+            <div class="form-group">
+                <label>公司</label>
+                <input type="text" id="company" placeholder="请输入公司名称" value="科技有限公司">
+            </div>
+
+            <div class="form-group">
+                <label>个人简介</label>
+                <textarea id="bio" placeholder="简单介绍一下自己...">专注于用户体验设计和产品创新</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="email" id="email" placeholder="your@email.com" value="zhangsan@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>电话</label>
+                <input type="tel" id="phone" placeholder="请输入电话号码" value="138-0000-0000">
+            </div>
+
+            <div class="form-group">
+                <label>其他（社交媒体/网站等）</label>
+                <input type="text" id="other" placeholder="例如：LinkedIn, 微信, GitHub等" value="">
+            </div>
+
+            <div class="form-group">
+                <label>选择卡片风格</label>
+                <div class="template-selection" id="templateSelection"></div>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h2>卡片预览</h2>
+            <div id="cardPreview"></div>
+            <button class="download-btn" onclick="downloadCard()">下载名片 (JPG)</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        const avatars = ['👨', '👩', '🧑', '👨‍💼', '👩‍💼', '👨‍💻', '👩‍💻', '🧑‍💻'];
+
+        const templates = [
+            {
+                name: '清新绿',
+                gradient: 'linear-gradient(135deg, #a8e6cf 0%, #56ab91 100%)',
+                textColor: '#2d5016',
+                accentColor: '#ffffff'
+            },
+            {
+                name: '薄荷绿',
+                gradient: 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)',
+                textColor: '#1a4d2e',
+                accentColor: '#ffffff'
+            },
+            {
+                name: '森林绿',
+                gradient: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)',
+                textColor: '#ffffff',
+                accentColor: '#d4fc79'
+            },
+            {
+                name: '翡翠绿',
+                gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+                textColor: '#ffffff',
+                accentColor: '#d4fc79'
+            },
+            {
+                name: '草地绿',
+                gradient: 'linear-gradient(135deg, #7de2fc 0%, #b9fbc0 100%)',
+                textColor: '#1a5f3f',
+                accentColor: '#ffffff'
+            },
+            {
+                name: '深绿',
+                gradient: 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
+                textColor: '#ffffff',
+                accentColor: '#a8e6cf'
+            }
+        ];
+
+        let selectedAvatar = avatars[0];
+        let selectedTemplate = templates[0];
+
+        function initAvatars() {
+            const container = document.getElementById('avatarSelection');
+            avatars.forEach((avatar, index) => {
+                const div = document.createElement('div');
+                div.className = 'avatar-option' + (index === 0 ? ' selected' : '');
+                div.textContent = avatar;
+                div.onclick = () => selectAvatar(avatar, div);
+                container.appendChild(div);
+            });
+        }
+
+        function selectAvatar(avatar, element) {
+            selectedAvatar = avatar;
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            updatePreview();
+        }
+
+        function initTemplates() {
+            const container = document.getElementById('templateSelection');
+            templates.forEach((template, index) => {
+                const div = document.createElement('div');
+                div.className = 'template-option' + (index === 0 ? ' selected' : '');
+                div.innerHTML = `
+                    <div class="template-preview" style="background: ${template.gradient}"></div>
+                    <div>${template.name}</div>
+                `;
+                div.onclick = () => selectTemplate(template, div);
+                container.appendChild(div);
+            });
+        }
+
+        function selectTemplate(template, element) {
+            selectedTemplate = template;
+            document.querySelectorAll('.template-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('name').value || '您的姓名';
+            const title = document.getElementById('title').value || '您的职位';
+            const company = document.getElementById('company').value;
+            const bio = document.getElementById('bio').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const other = document.getElementById('other').value;
+
+            const preview = document.getElementById('cardPreview');
+            preview.style.background = selectedTemplate.gradient;
+            preview.style.color = selectedTemplate.textColor;
+
+            preview.innerHTML = `
+                <div style="padding: 40px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="font-size: 5em; width: 100px; height: 100px; background: ${selectedTemplate.accentColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow: hidden;">
+                            <span style="font-size: 0.7em; line-height: 1;">${selectedAvatar}</span>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 1.8em; font-weight: bold; margin-bottom: 5px;">${name}</div>
+                            <div style="font-size: 1.1em; opacity: 0.9;">${title}</div>
+                            ${company ? `<div style="font-size: 0.95em; opacity: 0.8; margin-top: 3px;">${company}</div>` : ''}
+                        </div>
+                    </div>
+
+                    ${bio ? `<div style="font-size: 0.9em; opacity: 0.85; line-height: 1.5; margin: 15px 0;">${bio}</div>` : ''}
+
+                    <div style="font-size: 0.85em; opacity: 0.9; line-height: 1.8;">
+                        ${email ? `<div>📧 ${email}</div>` : ''}
+                        ${phone ? `<div>📱 ${phone}</div>` : ''}
+                        ${other ? `<div>🔗 ${other}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function downloadCard() {
+            const card = document.getElementById('cardPreview');
+            const canvas = await html2canvas(card, {
+                scale: 3,
+                backgroundColor: null,
+                logging: false
+            });
+
+            const link = document.createElement('a');
+            link.download = 'personal-card.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+        }
+
+        document.getElementById('name').addEventListener('input', updatePreview);
+        document.getElementById('title').addEventListener('input', updatePreview);
+        document.getElementById('company').addEventListener('input', updatePreview);
+        document.getElementById('bio').addEventListener('input', updatePreview);
+        document.getElementById('email').addEventListener('input', updatePreview);
+        document.getElementById('phone').addEventListener('input', updatePreview);
+        document.getElementById('other').addEventListener('input', updatePreview);
+
+        initAvatars();
+        initTemplates();
+        updatePreview();
+    </script>
+</body>
+</html>

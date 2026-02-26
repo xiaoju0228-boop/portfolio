@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的作品集</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">MyPortfolio</div>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#works">作品</a></li>
+                <li><a href="#guestbook">留言板</a></li>
+            </ul>
+            <div class="menu-toggle">☰</div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>欢迎来到我的作品集</h1>
+            <p>这里展示了我制作的网页和项目</p>
+            <a href="#works" class="btn">查看作品</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>关于我</h2>
+        <div class="about-content">
+            <div class="avatar">
+                <img src="images/avatar.jpg" alt="头像" onerror="this.style.display='none'">
+            </div>
+            <div class="bio">
+                <h3 id="name">xiaoju</h3>
+                <p id="intro">这是我的个人作品集，欢迎浏览！</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="works" class="works">
+        <h2>我的作品</h2>
+        <div class="works-grid" id="works-grid">
+            <!-- 作品将通过 JavaScript 动态加载 -->
+        </div>
+    </section>
+
+    <section id="guestbook" class="guestbook">
+        <h2>留言板</h2>
+        <div class="guestbook-form">
+            <input type="text" id="guest-name" placeholder="你的名字" maxlength="20">
+            <textarea id="guest-message" placeholder="写下你的留言..." maxlength="200"></textarea>
+            <button onclick="addGuestbookEntry()" class="btn">提交留言</button>
+        </div>
+        <div class="guestbook-list" id="guestbook-list">
+            <!-- 留言将通过 JavaScript 加载 -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 我的作品集. All rights reserved.</p>
+    </footer>
+
+    <!-- 背景音乐 -->
+    <audio id="bgm" loop>
+        <source src="audio/bgm.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-toggle" onclick="toggleMusic()" title="背景音乐">🎵</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
