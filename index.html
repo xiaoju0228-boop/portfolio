@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>局外人 — 作品集</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">局外人</a>
+            <ul class="nav-links">
+                <li><a href="#works">作品</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#guestbook">留言</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="works" class="works">
+        <h2>我的作品</h2>
+        <div class="works-grid" id="works-grid">
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-content">
+            <div class="avatar">
+                <img src="images/avatar.jpg" alt="头像" onerror="this.style.display='none'">
+            </div>
+            <div class="bio">
+                <h3>关于我</h3>
+                <p>都是用AI辅助编程做的一些小玩意，欢迎体验</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="guestbook" class="guestbook">
+        <h2>留言</h2>
+        <div class="guestbook-form">
+            <input type="text" id="guest-name" placeholder="你的名字" maxlength="20">
+            <textarea id="guest-message" placeholder="想对我说什么？" maxlength="200"></textarea>
+            <button onclick="addGuestbookEntry()">提交</button>
+        </div>
+        <div class="guestbook-list" id="guestbook-list">
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 局外人. All rights reserved.</p>
+    </footer>
+
+    <audio id="bgm" loop>
+        <source src="audio/bgm.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-toggle" onclick="toggleMusic()">♪</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
