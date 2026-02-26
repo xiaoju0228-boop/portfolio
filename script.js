@@ -11,11 +11,6 @@ const works = [
         link: 'works/brick-breaker.html'
     },
     {
-        title: '卡片生成器',
-        description: '在线卡片制作工具',
-        link: 'works/card-generator.html'
-    },
-    {
         title: 'MBTI 测试',
         description: '人格类型测试小程序',
         link: 'works/mbti_test.html'
